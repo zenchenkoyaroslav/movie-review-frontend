@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://movie-review-upce.herokuapp.com/",
+  baseURL: "https://movie-review-upce.herokuapp.com",
   responseType: "json",
   headers: {'Content-Type': 'application/json'},
 });
@@ -17,11 +17,7 @@ api.interceptors.request.use(
 )
 
 function getAuthenticationToken() {
-  let token = sessionStorage.getItem('token');
-  if (token) {
-    return token;
-  }
-  token = localStorage.getItem('token')
+  let token = localStorage.getItem('token')
   if (token){
     return token;
   }
