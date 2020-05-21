@@ -1,58 +1,78 @@
 import React, { Component } from 'react';
-
+import api from '../API.js';
 
 export default class Navbar extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLogged: false,
+            username: ''
+        }
+    }
+
+    async componentDidMount() {
+        this.checkLogin();
+    }
+
+    checkLogin = async () => {
+        if (localStorage.getItem("token")){
+            try {
+                let response = await api.get("/users/current")
+                this.setState({
+                    isLogged : true,
+                    username : response.data.name
+                })
+            } catch (error){
+                localStorage.removeItem("token");
+                this.setState({
+                    isLogged : false,
+                    username : ''
+                })
+            }
+        } else {
+            this.setState({
+                isLogged : false,
+                username : ''
+            })
+        }
+    }
 
     dataHeaderTaglines = [
-        "Cinema finder through millions of moovies.",
+        "Cinema finder through millions of moovies. ",
         "DiCaprio finally got an oscar!"
     ];
 
-    dataTopnavlinks = [
-        {
-            "title": "Top",
-            "href": "#top",
-            "class": "p-2 text-dark"
-        },
-        {
-            "title": "All",
-            "href": "#all",
-            "class": "p-2 text-dark"
-        },
-        {
-            "title": "Favourites",
-            "href": "#favourites",
-            "class": "p-2 text-dark"
+    onLogout = (e) => {    
+        api.post('/users/logout', "").then(data => {            
+            this.setState({isLogged:false});
+            localStorage.removeItem('token');
+        }).catch(this.setState({isLogged:true}));  
+      }
+    
+    TopNav = () => {
+        let button;
+        if (this.state.isLogged) {
+            button = <a className="btn btn-outline-danger ml-4" onClick={this.onLogout}>Logout</a>;
+        } else {
+            button = <a className="btn btn-outline-danger ml-4" href="/login">Log in</a>;
         }
-    ];
-
-    TopNav = ({ links }) => <div className="d-flex flex-column flex-md-row align-items-center justify-content-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <nav className="my-2 my-md-0">
-        </nav>
-        <a className="btn btn-outline-danger ml-4" href="#">Log in</a>
-        <a className="btn btn-outline-danger ml-4" href="#">Logout</a>
-    </div>
-
-    Search = () =>
-        <div className="input-group mb-3">
-            <input type="text" className="form-control" placeholder="Search..." aria-label="Search..." aria-describedby="button-addon2"></input>
-            <div className="input-group-append">
-                <button className="btn btn-outline-danger" type="button" id="button-addon2">Search</button>
-            </div>
-        </div>
+        
+        return (<div className="d-flex flex-column flex-md-row align-items-center justify-content-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+            <nav className="my-2 my-md-0">
+            </nav>
+            {button}
+        </div>);
+    }
 
     Header = ({ title, taglines }) =>
         <div className="container px-3 py-3 pt-md-3 pb-md-3 mx-auto text-center">
-            <h1 className="display-4"><i className="fas fa-film"></i> {title}</h1>
+            <a href="/" className="text-dark"><h1 className="display-4"><i className="fas fa-film"></i> {title}</h1></a>
             <p className="lead">
                 {taglines.map((tagline, i) =>
                     <span key={i}>{tagline}</span>
                 )}</p>
-            <this.Search/>
         </div>
-
-
 
     render() {
         return (

@@ -1,39 +1,60 @@
 import React, { Component } from 'react';
-import ModalFilm from './modal-film'
-import ContentFilmCard from './content-film-card'
+import ContentFilmCard from './content-film-card';
+import api from '../API.js';
+import { Link } from 'react-router-dom';
 
 export default class Content extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      films: [],
+      perPage: 10,
+      currentPage: 0,
+      offset: 0,
+    };
+  }
 
-    render() {
-        return(
-            <div className="col-md-8 col-lg-9">
+  async componentDidMount() {
+    api.get('/films').then(data => {
+      this.setState({ films: data.data.content });
+    });
+  }
+
+  paginationComp = () => {
+    return (
+      <ul className="pagination justify-content-center">
+        <li className="page-item"><Link className="page-link" to="#">1</Link></li>
+        <li className="page-item"><Link className="page-link" to="#">2</Link></li>
+        <li className="page-item"><Link className="page-link" to="#">3</Link></li>
+      </ul>
+    );
+  }
+
+  render() {
+    let filmsComponent = this.state.films.map((film) =>
+      <ContentFilmCard
+        filmId={film.id}
+        filmTitle={film.title}
+        filmYear={film.year}
+        filmDescription={film.description}
+        filmPoster={film.poster}
+      />
+    );
+
+    return (
+      <>
+        <div className="col-md-12 col-lg-12">
           <div className="row">
-            <ContentFilmCard
-              filmTitle="xd"
-              filmYear="2020"
-              filmDescription="qwe test film description"
-              filmPoster="https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/8e08470b-0241-47f4-9ee6-32406da24df5/360"/>
-            
-            <ContentFilmCard
-              filmTitle="xd"
-              filmYear="2020"
-              filmDescription="qwe test film description"
-              filmPoster="https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/8e08470b-0241-47f4-9ee6-32406da24df5/360"/>
-            
-            <ContentFilmCard
-              filmTitle="xd"
-              filmYear="2020"
-              filmDescription="qwe test film description"
-              filmPoster="https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/8e08470b-0241-47f4-9ee6-32406da24df5/360"/>
+            {filmsComponent}
           </div>
-          
-          <ModalFilm
-            filmTitle="Film Title"
-            filmDescription="Film Description"
-            filmPoster="https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/63771e4c-3614-449c-a420-bcaf3288130a/360"
-            filmYear="2020"/>
-        </div>);
-    }
+          <div className="w-100 text-center">
+            <nav aria-label="Page navigation example">
+              {this.paginationComp()}
+            </nav>
+          </div>
+        </div>
+      </>
+    );
+  }
 }
-
