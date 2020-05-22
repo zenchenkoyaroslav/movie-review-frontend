@@ -45,7 +45,7 @@ export default class Navbar extends Component {
     onLogout = (e) => {    
         api.post('/users/logout', "").then(data => {            
             this.setState({isLogged:false});
-            localStorage.removeItem('token');3
+            localStorage.removeItem('token');
         }).catch(this.setState({isLogged:true}));  
       }
     
