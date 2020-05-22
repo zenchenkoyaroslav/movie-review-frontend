@@ -39,8 +39,7 @@ export default class Navbar extends Component {
     }
 
     dataHeaderTaglines = [
-        "Cinema finder through millions of moovies. ",
-        "DiCaprio finally got an oscar!"
+        "Cinema finder through millions of moovies. "
     ];
 
     onLogout = (e) => {    
