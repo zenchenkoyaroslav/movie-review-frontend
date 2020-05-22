@@ -48,7 +48,7 @@ const AddReview = ({filmId, history}) => {
         <form>
           <div className="form-group">
             <label for="reviewTitleInput">Review title</label>
-              <input type="text" className="form-control" id="reviewTitleInput" placeholder="Bullshit" onChange={titleChange}></input>
+              <input type="text" className="form-control" id="reviewTitleInput" placeholder="Title" onChange={titleChange}></input>
           </div>
           <label for="reviewRateInput">Rate</label>
           <select class="custom-select mb-3" onChange={rateChange}>

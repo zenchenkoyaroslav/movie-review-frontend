@@ -39,13 +39,13 @@ export default class Navbar extends Component {
     }
 
     dataHeaderTaglines = [
-        "Cinema finder through millions of moovies. "
+        "Cinema finder through millions of movies. "
     ];
 
     onLogout = (e) => {    
         api.post('/users/logout', "").then(data => {            
             this.setState({isLogged:false});
-            localStorage.removeItem('token');
+            localStorage.removeItem('token');3
         }).catch(this.setState({isLogged:true}));  
       }
     
