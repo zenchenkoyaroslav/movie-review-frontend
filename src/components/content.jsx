@@ -9,10 +9,20 @@ export default class Content extends Component {
     super(props);
     this.state = {
       films: [],
-      perPage: 10,
+      perPage: 6,
       currentPage: 0,
       offset: 0,
+      sort: "year",
+      desc: true
     };
+  }
+
+  getRequest(){
+    let request = `/films?page=${this.state.actualPage}&size=${this.state.perPage}&sort=${this.state.sort}`
+    if(this.state.desc){
+      request += `,desc`
+    }
+    return (request);
   }
 
   async componentDidMount() {
@@ -31,14 +41,30 @@ export default class Content extends Component {
     );
   }
 
+  sortingComp = () => {
+    return (
+      <p>
+        <button type="button" value="title" onClick={this.onSortChange} class="btn btn-outline-info">Title</button>
+        <button type="button" value="year" onClick={this.onSortChange} class="btn btn-outline-info">Year</button>
+      </p>
+    );
+  }
+
   onPageChange = (e) => {
     let pageNumber = e.target.value - 1
     this.setState({actualPage: pageNumber})
-    this.readFilms(pageNumber)
+    this.readFilms()
   }
 
-  readFilms(pageNumber) {
-    api.get(`/films?page=${pageNumber}&size=6&sort=year,desc`).then(data => {
+  onSortChange = (e) => {
+    let sortBy = e.target.value
+    this.setState({sort: sortBy})
+    this.readFilms()
+  }
+
+  readFilms() {
+    this.setState({desc: !this.state.desc})
+    api.get(this.getRequest()).then(data => {
       this.setState({
       films: data.data.content,
         totalPages: data.data.totalPages,
@@ -62,6 +88,11 @@ export default class Content extends Component {
     return (
       <>
         <div className="col-md-12 col-lg-12">
+          <div class="col px-md-5" className="w-100 text-center">
+            <div class="p-3 border bg-light">
+              {this.sortingComp()}
+            </div>
+          </div>
           <div className="row">
             {filmsComponent}
           </div>
