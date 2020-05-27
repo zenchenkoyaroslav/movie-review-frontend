@@ -16,19 +16,36 @@ export default class Content extends Component {
   }
 
   async componentDidMount() {
-    api.get('/films').then(data => {
-      this.setState({ films: data.data.content });
-    });
+    this.readFilms(0);
   }
 
   paginationComp = () => {
+    let pagesNumbers = []
+    for (let i = 1; i <= this.state.totalPages; i++) {
+        pagesNumbers.push(<li className="page-item"><button type="button" value={i} onClick={this.onPageChange} class="btn btn-outline-info">{i}</button></li>);
+    }
     return (
       <ul className="pagination justify-content-center">
-        <li className="page-item"><Link className="page-link" to="#">1</Link></li>
-        <li className="page-item"><Link className="page-link" to="#">2</Link></li>
-        <li className="page-item"><Link className="page-link" to="#">3</Link></li>
+        {pagesNumbers}
       </ul>
     );
+  }
+
+  onPageChange = (e) => {
+    let pageNumber = e.target.value - 1
+    this.setState({actualPage: pageNumber})
+    this.readFilms(pageNumber)
+  }
+
+  readFilms(pageNumber) {
+    api.get(`/films?page=${pageNumber}&size=6&sort=year,desc`).then(data => {
+      this.setState({
+      films: data.data.content,
+        totalPages: data.data.totalPages,
+        totalItemsCount: data.data.totalItemsCount,
+        size: data.data.size
+      });
+    });
   }
 
   render() {
