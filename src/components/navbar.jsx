@@ -47,21 +47,27 @@ export default class Navbar extends Component {
             this.setState({isLogged:false});
             localStorage.removeItem('token');
         }).catch(this.setState({isLogged:true}));  
-      }
+    }
     
     TopNav = () => {
-        let button;
+        let loginButton;
+        let addFilmButton;
         if (this.state.isLogged) {
-            button = <a className="btn btn-outline-danger ml-4" onClick={this.onLogout}>Logout</a>;
+            loginButton = <a className="btn btn-outline-danger ml-4" href="/" onClick={this.onLogout}>Logout</a>;
+            if(this.state.username === "Admin"){
+                addFilmButton = <a className="btn btn-outline-danger ml-4" href="/add_film">Add Film</a>;
+            }
         } else {
-            button = <a className="btn btn-outline-danger ml-4" href="/login">Log in</a>;
+            loginButton = <a className="btn btn-outline-danger ml-4" href="/login">Log in</a>;
         }
         
-        return (<div className="d-flex flex-column flex-md-row align-items-center justify-content-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-            <nav className="my-2 my-md-0">
-            </nav>
-            {button}
-        </div>);
+        return (
+            <div className="d-flex flex-column flex-md-row align-items-center justify-content-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+                <nav className="my-2 my-md-0"></nav>
+                {loginButton}
+                {addFilmButton}
+            </div>
+        );
     }
 
     Header = ({ title, taglines }) =>

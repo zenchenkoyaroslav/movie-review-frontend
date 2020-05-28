@@ -5,7 +5,8 @@ const Alert = ({error}) => {
     let errorMessage;
 
     if (error.response) {
-        errorMessage = error.response.data.message;
+        console.error("Internal error", error.response)
+       errorMessage = error.response.data
     } else if (error.request) {
         errorMessage = error.request;
     } else {

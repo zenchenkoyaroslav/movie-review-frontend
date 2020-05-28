@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ContentFilmCard from './content-film-card';
 import api from '../API.js';
-import { Link } from 'react-router-dom';
 
 export default class Content extends Component {
 
@@ -13,7 +12,7 @@ export default class Content extends Component {
       currentPage: 0,
       offset: 0,
       sort: "year",
-      desc: true
+      desc: false
     };
   }
 
@@ -32,7 +31,7 @@ export default class Content extends Component {
   paginationComp = () => {
     let pagesNumbers = []
     for (let i = 1; i <= this.state.totalPages; i++) {
-        pagesNumbers.push(<li className="page-item"><button type="button" value={i} onClick={this.onPageChange} class="btn btn-outline-info">{i}</button></li>);
+        pagesNumbers.push(<li className="page-item"><button type="button" value={i} onClick={this.onPageChange} className="btn btn-outline-info">{i}</button></li>);
     }
     return (
       <ul className="pagination justify-content-center">
@@ -44,8 +43,8 @@ export default class Content extends Component {
   sortingComp = () => {
     return (
       <p>
-        <button type="button" value="title" onClick={this.onSortChange} class="btn btn-outline-info">Title</button>
-        <button type="button" value="year" onClick={this.onSortChange} class="btn btn-outline-info">Year</button>
+        <button type="button" value="title" onClick={this.onSortChange} className="btn btn-outline-info">Title</button>
+        <button type="button" value="year" onClick={this.onSortChange} className="btn btn-outline-info">Year</button>
       </p>
     );
   }
@@ -62,8 +61,12 @@ export default class Content extends Component {
     this.readFilms()
   }
 
-  readFilms() {
+  /*onDescChange = (e) => {
     this.setState({desc: !this.state.desc})
+    this.readFilms()
+  }*/
+
+  readFilms() {
     api.get(this.getRequest()).then(data => {
       this.setState({
       films: data.data.content,
@@ -88,8 +91,8 @@ export default class Content extends Component {
     return (
       <>
         <div className="col-md-12 col-lg-12">
-          <div class="col px-md-5" className="w-100 text-center">
-            <div class="p-3 border bg-light">
+          <div className="col px-md-5">
+            <div className="w-100 text-center">
               {this.sortingComp()}
             </div>
           </div>
