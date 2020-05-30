@@ -1,14 +1,34 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import API from '../API'
 import Alert from './alert'
 import { withRouter, Redirect } from 'react-router-dom';
 
-const AddFilm = ({history}) => {
-    const [title, setTitle] = useState("Title")
-    const [description, setDescriprion] = useState("Descriprion")
-    const [year, setYear] = useState(2020)
+const AddFilm = ({filmId, history}) => {
+    const [title, setTitle] = useState("")
+    const [description, setDescriprion] = useState("")
+    const [year, setYear] = useState()
+    const [country, setCountry] = useState("")
     const [poster, setPoster] = useState("")
+
+    const [film, setFilm] = useState('')
     const [error, setError] = useState('')
+
+    
+    useEffect(() => {
+      async function getFilm() {
+        let f = await API.get(`/films/${filmId}`).then(data => {return data.data})
+        setFilm(f);
+      }
+
+      if(filmId){
+        getFilm()
+        setTitle(film.title)
+        setYear(film.year)
+        setDescriprion(film.description)
+        setCountry(film.country)
+        setPoster(film.poster)
+      }
+    });
 
     const descriptionChange = (e) => {
         setDescriprion(e.target.value)
@@ -22,12 +42,17 @@ const AddFilm = ({history}) => {
 
     const yearChange = (e) => {
         let year = Number(e.target.value)
-        setYear(year);
+        setYear(year)
         setError('')
     }
 
     const titleChange = (e) => {
-      setTitle(e.target.value);
+      setTitle(e.target.value)
+      setError('')
+    }
+
+    const countryChange = (e) => {
+      setCountry(e.target.value)
       setError('')
     }
 
@@ -38,9 +63,13 @@ const AddFilm = ({history}) => {
         year : year,
         poster : poster,
         description : description,
-        country : "USA"
+        country : country
       }
-      API.post("/films", data).then( data => history.push(`/films`)).catch(e => setError(e))
+      if(filmId){
+        API.put(`/films/${filmId}`, data).then( data => history.push(`/films/${filmId}`)).catch(e => setError(e))
+      } else{
+        API.post("/films", data).then( data => history.push(`/`)).catch(e => setError(e))
+      }
     }
 
     return (
@@ -50,19 +79,23 @@ const AddFilm = ({history}) => {
         <form>
           <div className="form-group">
             <label for="filmTitleInput">Title</label>
-              <input type="text" className="form-control" id="filmTitleInput" placeholder="Title" onChange={titleChange}></input>
+              <input type="text" className="form-control" defaultValue={title} id="filmTitleInput" placeholder="Title" onChange={titleChange}></input>
           </div>
           <div className="form-group">
             <label for="filmYearInput">Year</label>
-              <input type="text" className="form-control" id="filmYearInput" placeholder="Year" onChange={yearChange}></input>
+              <input type="text" className="form-control" defaultValue={year} id="filmYearInput" placeholder="Year" onChange={yearChange}></input>
+          </div>
+          <div className="form-group">
+            <label for="filmCountryInput">Country</label>
+              <input type="text" className="form-control" defaultValue={country} id="filmCountryInput" placeholder="Country" onChange={countryChange}></input>
           </div>
           <div className="form-group">
             <label for="filmPosterInput">Poster</label>
-              <input type="text" className="form-control" id="filmPosterInput" placeholder="Image Link" onChange={posterChange}></input>
+              <input type="text" className="form-control" defaultValue={poster} id="filmPosterInput" placeholder="Image Link" onChange={posterChange}></input>
           </div>
           <div className="form-group">
             <label for="filmDescriptionInput">Descriprion</label>
-              <textarea className="form-control" id="filmDescriptionInput" rows="3" onChange={descriptionChange}></textarea>
+              <textarea className="form-control" defaultValue={description} id="filmDescriptionInput" rows="3" onChange={descriptionChange}></textarea>
           </div>
           <div>
               <button type="button" className="btn btn-lg mb-4 btn-block btn-outline-success" onClick={onSubmit}>Add Film</button>
