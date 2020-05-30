@@ -50,20 +50,20 @@ export default class Content extends Component {
     );
   }
 
-  onPageChange = (e) => {
+  onPageChange = async (e) => {
     let pageNumber = e.target.value - 1
-    this.setState({actualPage: pageNumber})
+    await this.setState({actualPage: pageNumber})
     this.readFilms()
   }
 
-  onSortChange = (e) => {
+  onSortChange = async (e) => {
     let sortBy = e.target.value
-    this.setState({sort: sortBy})
+    await this.setState({sort: sortBy})
     this.readFilms()
   }
 
-  onDescChange = (e) => {
-    this.setState({desc: !this.state.desc})
+  onDescChange = async (e) => {
+    await this.setState({desc: !this.state.desc})
     this.readFilms()
   }
 
