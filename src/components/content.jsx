@@ -45,6 +45,7 @@ export default class Content extends Component {
       <p>
         <button type="button" value="title" onClick={this.onSortChange} className="btn btn-outline-info">Title</button>
         <button type="button" value="year" onClick={this.onSortChange} className="btn btn-outline-info">Year</button>
+        <button type="button" onClick={this.onDescChange} className="btn btn-outline-info">Reverse order</button>
       </p>
     );
   }
@@ -61,10 +62,10 @@ export default class Content extends Component {
     this.readFilms()
   }
 
-  /*onDescChange = (e) => {
+  onDescChange = (e) => {
     this.setState({desc: !this.state.desc})
     this.readFilms()
-  }*/
+  }
 
   readFilms() {
     api.get(this.getRequest()).then(data => {

@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import Review from './review'
 import Cast from './cast'
 import API from '../API'
-import Alert from './alert'
 
 const FilmFull = ({filmId, history}) => {
     const [film, setFilm] = useState('');
@@ -11,14 +10,12 @@ const FilmFull = ({filmId, history}) => {
     const [edit, setEdit] = useState('')
     const [del, setDel] = useState('')
 
-    const [error, setError] = useState('')
-
     useEffect(() => {
       if (!film){
         getFilm()
       }
       setPageForAdmin()
-    }, [])
+    })
 
     const setPageForAdmin = async () => {
       let u = await API.get("/users/current")
@@ -45,7 +42,6 @@ const FilmFull = ({filmId, history}) => {
 
     return (
       <div className="col-md-12 col-lg-12">
-        <Alert error={error}/>  
         <div className="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
           <div className="col p-4 d-flex flex-column position-static">
             <div className="row">
