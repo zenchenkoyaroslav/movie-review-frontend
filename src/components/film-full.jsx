@@ -4,11 +4,12 @@ import Cast from './cast'
 import API from '../API'
 import Alert from './alert'
 
-const FilmFull = ({filmId}) => {
+const FilmFull = ({filmId, history}) => {
     const [film, setFilm] = useState('');
     const [reviews, setReviews] = useState([])
     const [cast, setCast] = useState([])
     const [edit, setEdit] = useState('')
+    const [del, setDel] = useState('')
 
     const [error, setError] = useState('')
 
@@ -16,14 +17,19 @@ const FilmFull = ({filmId}) => {
       if (!film){
         getFilm()
       }
-      getEdit()
+      setPageForAdmin()
     }, [])
 
-    const getEdit = async () => {
+    const setPageForAdmin = async () => {
       let u = await API.get("/users/current")
       if(u.data.role === "ADMIN"){
-        setEdit(<a href={`/add_film/${film.id}`} type="button" className="btn btn-outline-danger mb-3">Edit</a>)
+        setEdit(<a href={`/add_film/${filmId}`} type="button" className="btn btn-outline-danger mb-3">Edit</a>)
+        setDel(<a href='/' onClick={deleteFilm} type="button" className="btn btn-outline-danger mb-3">Delete</a>)
       }
+    }
+
+    const deleteFilm = async () => {
+      await API.delete(`/films/${filmId}`)
     }
 
     const getFilm = async () => {
@@ -48,6 +54,7 @@ const FilmFull = ({filmId}) => {
                   Back to catalog
                 </a>
                 {edit}
+                {del}
                 <a href={`/review/${film.id}`} type="button" className="btn btn-outline-danger mb-3">
                   Add review
                 </a>

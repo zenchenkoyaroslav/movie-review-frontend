@@ -9,6 +9,7 @@ const AddFilm = ({filmId, history}) => {
     const [year, setYear] = useState()
     const [country, setCountry] = useState("")
     const [poster, setPoster] = useState("")
+    const [submitText, setSubmitText] = useState("Add Film")
 
     const [film, setFilm] = useState('')
     const [error, setError] = useState('')
@@ -27,6 +28,7 @@ const AddFilm = ({filmId, history}) => {
         setDescriprion(film.description)
         setCountry(film.country)
         setPoster(film.poster)
+        setSubmitText("Edit Film")
       }
     });
 
@@ -56,6 +58,7 @@ const AddFilm = ({filmId, history}) => {
       setError('')
     }
 
+    
     const onSubmit = (e) => {
       e.preventDefault();
       const data = {
@@ -98,7 +101,7 @@ const AddFilm = ({filmId, history}) => {
               <textarea className="form-control" defaultValue={description} id="filmDescriptionInput" rows="3" onChange={descriptionChange}></textarea>
           </div>
           <div>
-              <button type="button" className="btn btn-lg mb-4 btn-block btn-outline-success" onClick={onSubmit}>Add Film</button>
+            <button type="button" className="btn btn-lg mb-4 btn-block btn-outline-success" onClick={onSubmit}>{submitText}</button>
           </div>
         </form>
       </div>
