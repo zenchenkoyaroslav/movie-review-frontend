@@ -59,7 +59,7 @@ const AddFilm = ({filmId, history}) => {
     }
 
     
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
       e.preventDefault();
       const data = {
         title : title,
@@ -69,7 +69,7 @@ const AddFilm = ({filmId, history}) => {
         country : country
       }
       if(filmId!=null){
-        API.put(`/films/${filmId}`, data).then( data => history.push(`/films/${filmId}`)).catch(e => setError(e))
+        await API.put(`/films/${filmId}`, data).then( data => history.push(`/films/${filmId}`)).catch(e => setError(e))
       } else{
         API.post("/films", data).then( data => history.push(`/`)).catch(e => setError(e))
       }
