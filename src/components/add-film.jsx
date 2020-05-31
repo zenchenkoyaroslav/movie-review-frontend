@@ -71,7 +71,7 @@ const AddFilm = ({filmId, history}) => {
       if(filmId!=null){
         await API.put(`/films/${filmId}`, data).then( data => history.push(`/films/${filmId}`)).catch(e => setError(e))
       } else{
-        API.post("/films", data).then( data => history.push(`/`)).catch(e => setError(e))
+        await API.post("/films", data).then( data => history.push(`/`)).catch(e => setError(e))
       }
     }
 
